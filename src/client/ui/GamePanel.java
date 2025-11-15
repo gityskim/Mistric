@@ -10,6 +10,7 @@ public class GamePanel extends JPanel {
     private ChattingPanel chatPanel;
     private JPanel boardArea;
     private JPanel rightPanel;
+    private RoundedButton endTurnButton;
 
     public GamePanel(GameFrame parent) {
         this.parent = parent;
@@ -114,6 +115,14 @@ public class GamePanel extends JPanel {
             rightPanel.add(stone);
         }
 
+        // =======================================
+        // 턴 종료 버튼
+        // =======================================
+        endTurnButton = new RoundedButton("턴 종료");
+        endTurnButton.setBounds(55, 580, 150, 45);
+        endTurnButton.setEnabled(false);
+        rightPanel.add(endTurnButton);
+
     }
 
     // =========================================================
@@ -122,7 +131,7 @@ public class GamePanel extends JPanel {
     private JPanel createOpponentRow(int index, int x, int y, int w, int h) {
         JPanel row = new JPanel(null);
         row.setBounds(x, y, w, h);
-        row.setBackground(new Color(255, 0, 0));
+        row.setBackground(new Color(255,255,255));
         row.setBorder(BorderFactory.createLineBorder(new Color(200,200,200)));
 
         // 생명력
