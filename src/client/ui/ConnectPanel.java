@@ -70,6 +70,26 @@ class ConnectPanel extends JPanel {
         // ACTION
         // ======================
         connectBtn.addActionListener(e -> parent.showLobby());
+//        connectBtn.addActionListener(e -> {
+//            String ip = getIp();
+//            int port = getPort();
+//            String nick = getNick();
+//
+//            parent.connectToServer(ip, port, nick);  // UI → Frame → Network
+//        });
         exitBtn.addActionListener(e -> System.exit(0));
     }
+
+    public String getNick() {
+        return nickField.getText().trim();
+    }
+
+    public String getIp() {
+        return ipField.getText().trim();
+    }
+
+    public int getPort() {
+        return Integer.parseInt(portField.getText().trim());
+    }
+
 }
