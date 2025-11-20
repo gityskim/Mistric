@@ -85,8 +85,14 @@ public class GameFrame extends JFrame {
 
     public void updateChat(GameMsg msg) {
         String line = msg.user + ": " + msg.text;
+
+        // 방에 있을 경우
+        roomPanel.addChat(line);
+
+        // 게임 패널 채팅에도 표시
         gamePanel.addChat(line);
     }
+
 
     public void updateGameState(GameMsg msg) {
         // 게임 상태 수신 시 게임 화면으로 이동 + 보드 갱신

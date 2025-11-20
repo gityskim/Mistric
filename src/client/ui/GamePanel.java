@@ -191,7 +191,9 @@ public class GamePanel extends JPanel {
     // (지금은 TODO, 나중에 hp, stones 보고 그리면 됨)
     // =============================
     public void updateBoard(GameMsg msg) {
-        // TODO: msg.hp, msg.stones, msg.remainStones를 사용해서
-        //       중앙 보드를 다시 그려주면 됨.
+        // TODO: 서버에서 실제 게임 상태 보내줄 때 쓰임
+
+        // 예: 나중에 msg.hp, msg.stones, msg.remainStones 사용
+        System.out.println("게임 상태 갱신 도착!");
     }
 }

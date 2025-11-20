@@ -9,6 +9,7 @@ class RoomPanel extends JPanel {
     private GameFrame parent;
 
     private JPanel centerPanel;
+    private ChattingPanel chat; // ★ 변수로 저장
 
     public RoomPanel(GameFrame parent) {
         this.parent = parent;
@@ -16,19 +17,38 @@ class RoomPanel extends JPanel {
         setLayout(null);
         setBackground(new Color(240,240,240));
 
-        ChattingPanel chat = new ChattingPanel();
+        // ===========================
+        // 1) 채팅 패널
+        // ===========================
+        chat = new ChattingPanel();
         chat.setBounds(20, 20, 260, 600);
         add(chat);
-        // 방 채팅까지 서버와 묶으려면 여기서도 setSendListener 써서 GameMsg.CHAT 전송하면 됨.
 
+        //  방 채팅 → 서버로 CHAT 메시지 보내기
+        chat.setSendListener(e -> {
+            String text = chat.consumeInputText();
+            if (!text.isEmpty()) {
+                GameMsg msg = new GameMsg(
+                        GameMsg.CHAT,
+                        parent.getNick(),
+                        text
+                );
+                parent.getNetwork().send(msg);
+            }
+        });
+
+        // ===========================
+        // 2) 플레이어 패널
+        // ===========================
         centerPanel = new JPanel(null);
         centerPanel.setBounds(310, 20, 920, 600);
         centerPanel.setBackground(new Color(230,230,230));
         centerPanel.setBorder(BorderFactory.createLineBorder(new Color(200,200,200), 2));
         add(centerPanel);
 
-        // 처음 들어갔을 땐 빈 상태여도 OK. (서버에서 ROOM_UPDATE 오면 updatePlayers로 그림)
-
+        // ===========================
+        // 3) 게임 시작 버튼
+        // ===========================
         JButton startBtn = new RoundedButton("게임 시작");
         startBtn.setBounds(440, 630, 200, 40);
         startBtn.addActionListener(e -> {
@@ -37,13 +57,25 @@ class RoomPanel extends JPanel {
         });
         add(startBtn);
 
+        // ===========================
+        // 4) 로비로 나가기
+        // ===========================
         JButton backBtn = new RoundedButton("로비로 나가기");
         backBtn.setBounds(660, 630, 200, 40);
-        // 네트워크 상 ROOM_LEAVE를 아직 안 만들었다면, 일단 UI만 로비로 보내기
-        backBtn.addActionListener(e -> parent.showLobby());
+        backBtn.addActionListener(e -> {
+            parent.getNetwork().send(new GameMsg(
+                    GameMsg.ROOM_LEAVE,
+                    parent.getNick(),
+                    null
+            ));
+            parent.showLobby();
+        });
         add(backBtn);
     }
 
+    // ==================================
+    // 서버 → ROOM_UPDATE 수신 시 표현
+    // ==================================
     public void updatePlayers(String[] players) {
         centerPanel.removeAll();
 
@@ -64,4 +96,8 @@ class RoomPanel extends JPanel {
         centerPanel.revalidate();
         centerPanel.repaint();
     }
+    public void addChat(String line) {
+        chat.appendChat(line);
+    }
+
 }
